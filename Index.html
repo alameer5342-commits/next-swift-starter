@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Swift Pay — تحويل عبر PayPal واستلم محليًا</title>
+
+  <!-- خطوط -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg1:#060617;
+      --bg2:#140a2b;
+      --card: rgba(255,255,255,0.05);
+      --muted:#b8c0d6;
+      --accent:#6a0dad; 
+      --accent-dark:#3b0f7a;
+      --blue-accent:#1976d2;
+      --rate-color:#60a5fa;
+      --success:#00c896;
+      --danger:#ff4d4d;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background: linear-gradient(180deg,var(--bg1),var(--bg2));
+      color:#fff;
+      font-family:'Cairo', sans-serif;
+      line-height:1.5;
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:18px;}
+
+    .header-pill{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:12px;padding:10px;border-radius:12px;
+      background:linear-gradient(90deg,var(--accent-dark),var(--accent));
+      color:#fff;
+    }
+    .site-title{font-size:1.2rem; font-weight:800; display:flex; gap:10px; align-items:center;cursor:pointer}
+
+    .mini-features{display:flex;gap:10px; margin:18px 0; justify-content:center;}
+    .mini-feature{background:var(--card);padding:8px 12px;border-radius:10px;color:var(--muted);font-weight:600;}
+
+    .hero{ text-align:center; margin-top:6px; }
+    .hero h1{font-size:1.7rem;margin:6px 0 10px;}
+    .hero p{color:var(--muted); margin:6px 0 12px;}
+
+    /* الآلة الحاسبة */
+    .calc-box{background:#0b132b;padding:18px;border-radius:12px;max-width:360px;margin:20px auto;color:#fff}
+    .calc-row{display:flex;align-items:center;gap:8px;margin:10px 0}
+    .calc-input{flex:1;padding:10px;border-radius:8px;border:1px solid #444;background:#1c2541;color:#fff;text-align:center}
+    .flag{font-size:1.5rem}
+    .calc-result{margin-top:12px;padding:12px;border-radius:8px;background:#1c2541;font-size:0.95rem}
+    .calc-result p{margin:6px 0}
+
+    /* المحافظات */
+    .provinces{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:12px}
+    .prov{background:rgba(255,255,255,0.03);padding:10px;border-radius:10px;text-align:center;color:var(--muted)}
+    .prov b{display:block;color:var(--rate-color);font-size:1rem;margin-top:6px}
+
+    /* الأزرار */
+    .services{display:flex;gap:12px;justify-content:center;margin:18px 0;flex-wrap:wrap}
+    .svc-btn{
+      background:linear-gradient(90deg,var(--blue-accent),#115293);
+      padding:12px 22px;border-radius:999px;border:none;color:#fff;font-weight:800;cursor:pointer;
+    }
+
+    /* الفورم */
+    .form-area{max-width:720px;margin:20px auto;padding:14px;border-radius:12px;background:rgba(255,255,255,0.08);display:none}
+    .form-row{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+    input[type="text"], input[type="number"], input[type="file"]{
+      padding:10px;border-radius:10px;border:none;background:rgba(255,255,255,0.08);color:#fff;
+    }
+    label{font-weight:700;color:var(--muted);font-size:0.95rem;text-align:right}
+    .send-btn{background:var(--accent);color:#fff;padding:10px;border-radius:10px;border:none;font-weight:800;cursor:pointer;margin-top:8px}
+
+    .email-box{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);padding:6px 10px;border-radius:8px;margin:10px 0}
+    .copy-btn{background:#25D366;color:#fff;border:none;padding:6px 8px;border-radius:8px;cursor:pointer;font-weight:700}
+
+    .back-btn{margin-top:12px;background:#444;padding:8px 12px;border:none;color:#fff;border-radius:8px;cursor:pointer}
+
+    /* خطوات */
+    .steps{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+    .step{background:rgba(255,255,255,0.03);padding:12px;border-radius:10px;min-width:200px;text-align:right;color:var(--muted)}
+
+    /* العملاء */
+    .reviews{max-width:800px;margin:30px auto;display:grid;gap:12px}
+    .review{background:rgba(255,255,255,0.05);padding:14px;border-radius:12px}
+    .stars{color:gold}
+
+    /* FAQ */
+    .faq{max-width:800px;margin:30px auto;display:grid;gap:12px}
+    .faq-item{background:rgba(255,255,255,0.05);padding:14px;border-radius:12px}
+    .faq-item h4{margin:0 0 6px;color:var(--rate-color);font-size:1rem}
+    .faq-item p{margin:0;color:var(--muted);font-size:0.9rem}
+
+    /* تواصل */
+    .contact{margin:22px auto;text-align:center}
+    .social-btn{
+      display:flex;align-items:center;justify-content:center;
+      gap:8px;margin:8px auto;
+      padding:10px 14px;
+      border:none;border-radius:10px;
+      color:#fff;font-weight:800;cursor:pointer;
+      max-width:250px;
+    }
+    .whatsapp{background:#25D366}
+    .gmail{background:#D44638}
+    footer{margin-top:28px;text-align:center;color:var(--muted);font-size:0.9rem;padding-bottom:30px}
+  </style>
+</head>
+<body>
+  <div class="wrap" id="mainContent">
+
+    <div class="header-pill">
+      <div class="site-title" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        ⚡ <b>Swift Pay</b>
+      </div>
+      <button class="svc-btn" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">تحويل</button>
+    </div>
+
+    <div class="mini-features">
+      <div class="mini-feature">🔒 أمان</div>
+      <div class="mini-feature">⚡ دعم سريع</div>
+    </div>
+
+    <section class="hero">
+      <h1>حوّل عبر <span style="color:#1976d2">PayPal</span> واستلم محليًا</h1>
+      <p class="note">الحد الأدنى للتحويل: <b>10$</b> • رسوم واضحة • سعر الصرف محدث يوميًا</p>
+    </section>
+
+    <!-- الآلة الحاسبة -->
+    <div class="calc-box">
+      <h3 style="margin:0 0 10px;color:#fff">احسب حوالتك</h3>
+
+      <label>المبلغ (USD)</label>
+      <div class="calc-row">
+        <span class="flag">🇺🇸</span>
+        <input id="usdInput" class="calc-input" type="number" placeholder="10" min="10">
+      </div>
+
+      <label>سعر الصرف (ل.س / $1)</label>
+      <input id="rateInput" class="calc-input" type="number" value="11650" readonly>
+
+      <div class="calc-result" id="calcResult">
+        <p>الرسوم عبر PayPal و البنك: <b>0$</b></p>
+        <p>رسوم المعاملة: <b>0$</b></p>
+        <p>الصافي بالدولار: <b>0$</b></p>
+        <p>الصافي بالليرة السورية: <b>0 ل.س</b></p>
+      </div>
+    </div>
+
+    <h3 style="text-align:center;color:var(--muted)">أسعار الصرف حسب المحافظات</h3>
+    <div class="provinces">
+      <div class="prov">دمشق<b>11,650 ل.س</b></div>
+      <div class="prov">حلب<b>11,650 ل.س</b></div>
+      <div class="prov">حمص<b>11,650 ل.س</b></div>
+      <div class="prov">حماة<b>11,650 ل.س</b></div>
+      <div class="prov">اللاذقية<b>11,650 ل.س</b></div>
+      <div class="prov">السويداء<b>11,650 ل.س</b></div>
+      <div class="prov">دير الزور<b>11,650 ل.س</b></div>
+      <div class="prov">الرقة<b>11,650 ل.س</b></div>
+      <div class="prov">إدلب<b>11,650 ل.س</b></div>
+      <div class="prov">درعا<b>11,650 ل.س</b></div>
+      <div class="prov">القنيطرة<b>11,650 ل.س</b></div>
+      <div class="prov">ريف حلب<b>11,650 ل.س</b></div>
+    </div>
+
+    <h2 id="services" style="text-align:center;margin-top:20px">اختر طريقة التحويل</h2>
+    <div class="services">
+      <button class="svc-btn" onclick="showForm('formSham')">شام كاش</button>
+      <button class="svc-btn" onclick="showForm('formSyr')">سيريتل كاش</button>
+    </div>
+
+    <!-- خطوات -->
+    <section class="steps">
+      <div class="step">1️⃣ أدخل المبلغ ➝ احسب الرسوم والصافي</div>
+      <div class="step">2️⃣ ادفع عبر PayPal ➝ سجل الطلب</div>
+      <div class="step">3️⃣ مراجعة سريعة ➝ تحويل الصافي</div>
+      <div class="step">4️⃣ تأكيد العملية ➝ تم التحويل</div>
+    </section>
+
+    <!-- آراء العملاء -->
+    <h3 style="text-align:center;margin-top:30px">🌟 ماذا يقول العملاء</h3>
+    <div class="reviews">
+      <div class="review">
+        <b>لينا</b> <span class="stars">★★★★★</span>
+        <p>خدمة ممتازة وسريعة جدًا.</p>
+      </div>
+      <div class="review">
+        <b>أحمد</b> <span class="stars">★★★★☆</span>
+        <p>التجربة كانت رائعة والدعم سريع.</p>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <section class="faq">
+      <div class="faq-item">
+        <h4>💵 ما هو الحد الأدنى للتحويل؟</h4>
+        <p>الحد الأدنى للتحويل هو <b>10$</b>.</p>
+      </div>
+      <div class="faq-item">
+        <h4>⏳ كم تستغرق عملية التحويل؟</h4>
+        <p>تستغرق عادةً بين <b>1 - 24 ساعة</b> حسب الازدحام.</p>
+      </div>
+      <div class="faq-item">
+        <h4>❓ هل هناك عمولات خفية؟</h4>
+        <p>لا، جميع الرسوم واضحة وتظهر قبل الدفع.</p>
+      </div>
+    </section>
+
+    <!-- تواصل -->
+    <section class="contact">
+      <h3>تواصل معنا</h3>
+      <a href="https://wa.me/201116827129" target="_blank">
+        <button class="social-btn whatsapp">💬 تواصل عبر WhatsApp</button>
+      </a>
+      <a href="mailto:qousaialameer24@gmail.com">
+        <button class="social-btn gmail">📧 تواصل عبر Gmail</button>
+      </a>
+    </section>
+
+    <footer>© Swift Pay — جميع الحقوق محفوظة</footer>
+  </div>
+
+  <!-- شام كاش -->
+  <div id="formSham" class="form-area">
+    <h3>تحويل إلى شام كاش</h3>
+    <!-- **النص المطلوب فوق الايميل** -->
+    <p style="color:#60a5fa;font-weight:700">قم بالتحويل على هذا الإيميل في PayPal:</p>
+    <div class="email-box">
+      📧 <span id="shamEmail">qousaialameer24@gmail.com</span>
+      <button class="copy-btn" onclick="copyText('#shamEmail')">نسخ</button>
+    </div>
+    <form name="shamForm" method="POST" data-netlify="true" enctype="multipart/form-data" onsubmit="return handleSubmit(event)">
+      <div class="form-row">
+        <label>الاسم الكامل *</label>
+        <input type="text" name="fullname" required>
+        <label>رقم المستلم *</label>
+        <input type="text" name="phone" required pattern="09[0-9]{8}" placeholder="09XXXXXXXX">
+        <label>المبلغ $ *</label>
+        <input type="number" name="amount" required min="10">
+        <label>إيصال PayPal *</label>
+        <input type="file" name="receipt" required>
+        <button class="send-btn">تحويل</button>
+      </div>
+    </form>
+    <button class="back-btn" onclick="goBack()">⬅ رجوع</button>
+  </div>
+
+  <!-- سيريتل كاش -->
+  <div id="formSyr" class="form-area">
+    <h3>تحويل إلى سيريتل كاش</h3>
+    <!-- **النص المطلوب فوق الايميل** -->
+    <p style="color:#60a5fa;font-weight:700">قم بالتحويل على هذا الإيميل في PayPal:</p>
+    <div class="email-box">
+      📧 <span id="syrEmail">qousaialameer24@gmail.com</span>
+      <button class="copy-btn" onclick="copyText('#syrEmail')">نسخ</button>
+    </div>
+    <form name="syrForm" method="POST" data-netlify="true" enctype="multipart/form-data" onsubmit="return handleSubmit(event)">
+      <div class="form-row">
+        <label>الاسم الكامل *</label>
+        <input type="text" name="fullname" required>
+        <label>رقم المستلم *</label>
+        <input type="text" name="phone" required pattern="09[0-9]{8}" placeholder="09XXXXXXXX">
+        <label>المبلغ $ *</label>
+        <input type="number" name="amount" required min="10">
+        <label>إيصال PayPal *</label>
+        <input type="file" name="receipt" required>
+        <button class="send-btn">تحويل</button>
+      </div>
+    </form>
+    <button class="back-btn" onclick="goBack()">⬅ رجوع</button>
+  </div>
+
+<script>
+  // الآلة الحاسبة (كما كانت تماماً)
+  const usdInput=document.getElementById('usdInput');
+  const rateInput=document.getElementById('rateInput');
+  const calcResult=document.getElementById('calcResult');
+
+  if (usdInput) {
+    usdInput.addEventListener('input',()=>{
+      const usd=parseFloat(usdInput.value)||0;
+      const rate=parseFloat(rateInput.value)||11650;
+
+      if(usd<10){
+        calcResult.innerHTML="<p style='color:#f66'>❌ الحد الأدنى للتحويل 10$</p>";
+        return;
+      }
+
+      const paypalFee = 1.7; // ثابت
+      const txFee = 1; // ثابت
+      const netUsd = (usd - paypalFee - txFee).toFixed(2);
+      const netSyp = (netUsd * rate).toLocaleString();
+
+      calcResult.innerHTML=`
+        <p>الرسوم عبر PayPal و البنك: <b>${paypalFee}$</b></p>
+        <p>رسوم المعاملة: <b>${txFee}$</b></p>
+        <p>الصافي بالدولار: <b>${netUsd}$</b></p>
+        <p>الصافي بالليرة السورية: <b>${netSyp} ل.س</b></p>
+      `;
+    });
+  }
+
+  // نسخ الايميل
+  function copyText(sel){
+    const el=document.querySelector(sel);
+    if(!el) return;
+    navigator.clipboard.writeText(el.innerText).then(()=>alert("تم النسخ: "+el.innerText)).catch(()=>{ alert("فشل النسخ — انسخ يدويًا"); });
+  }
+
+  // فتح و غلق الفورمات (كما كانت)
+  function showForm(id){
+    document.getElementById('mainContent').style.display="none";
+    document.querySelectorAll('.form-area').forEach(f=>f.style.display="none");
+    const el = document.getElementById(id);
+    if(el) el.style.display="block";
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function goBack(){
+    document.getElementById('mainContent').style.display="block";
+    document.querySelectorAll('.form-area').forEach(f=>f.style.display="none");
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  // احتياطي لإرسال الفورم بدون كسر السلوك الافتراضي
+  function handleSubmit(e){
+    e.preventDefault();
+    alert("✅ تم إرسال الطلب بنجاح! سنتواصل معك قريبًا.");
+    try { e.target.submit(); } catch(err){ /* اذا ما بدك ترسل، يمكن تجاهل */ }
+    return true;
+  }
+</script>
+</body>
+</html>
